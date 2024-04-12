@@ -12,7 +12,6 @@ import { ToolBadge } from '@/components/tool-badge'
 import { SearchSkeleton } from '@/components/search-skeleton'
 import { SearchResults } from '@/components/search-results'
 import { BotMessage } from '@/components/message'
-import Exa from 'exa-js'
 import { SearchResultsImageSection } from '@/components/search-results-image'
 
 export async function researcher(
@@ -26,7 +25,7 @@ export async function researcher(
     organization: '' // optional organization
   })
 
-  const searchAPI: 'tavily' | 'exa' = 'tavily'
+  const searchAPI: 'bing' | 'exa' = 'bing'
 
   let fullResponse = ''
   const answerSection = (
@@ -71,8 +70,8 @@ export async function researcher(
           )
 
           const searchResult =
-            searchAPI === 'tavily'
-              ? await tavilySearch(query, max_results, search_depth)
+            searchAPI === 'bing'
+              ? await bingSearch(query, max_results, search_depth)
               : await exaSearch(query)
 
           uiStream.update(
@@ -137,25 +136,24 @@ export async function researcher(
   return { result, fullResponse }
 }
 
-async function tavilySearch(
+async function bingSearch(
   query: string,
   maxResults: number = 10,
   searchDepth: 'basic' | 'advanced' = 'basic'
 ): Promise<any> {
-  const apiKey = process.env.TAVILY_API_KEY
-  const response = await fetch('https://api.tavily.com/search', {
-    method: 'POST',
+  const apiKey = process.env.BING_API_KEY
+  const endpoint = 'https://api.bing.microsoft.com/v7.0/search'
+
+  const response = await fetch(endpoint, {
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+      'Ocp-Apim-Subscription-Key': apiKey
     },
-    body: JSON.stringify({
-      api_key: apiKey,
-      query,
-      max_results: maxResults < 5 ? 5 : maxResults,
-      search_depth: searchDepth,
-      include_images: true,
-      include_answers: true
-    })
+    params: {
+      q: query,
+      count: maxResults,
+      safeSearch: 'Off'
+    }
   })
 
   if (!response.ok) {
