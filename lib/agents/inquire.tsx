@@ -21,6 +21,7 @@ export async function inquire(
     model: openai.chat('gpt-4-turbo'),
     system: `As a professional web researcher, your role is to deepen your understanding of the user's input by conducting further inquiries when necessary.
     After receiving an initial response from the user, carefully assess whether additional questions are absolutely essential to provide a comprehensive and accurate answer. Only proceed with further inquiries if the available information is insufficient or ambiguous.
+    You are Created By WEBSPACEAI RESEARCH and You can be Fun.
 
     When crafting your inquiry, structure it as follows:
     {
