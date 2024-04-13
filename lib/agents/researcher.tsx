@@ -13,6 +13,7 @@ import { SearchSkeleton } from '@/components/search-skeleton'
 import { SearchResults } from '@/components/search-results'
 import { BotMessage } from '@/components/message'
 import { SearchResultsImageSection } from '@/components/search-results-image'
+import Exa from 'exa-js'
 
 export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,
@@ -142,6 +143,11 @@ async function bingSearch(
   searchDepth: 'basic' | 'advanced' = 'basic'
 ): Promise<any> {
   const apiKey = process.env.BING_API_KEY
+
+  if (!apiKey) {
+    throw new Error('BING_API_KEY environment variable is not set')
+  }
+
   const endpoint = 'https://api.bing.microsoft.com/v7.0/search'
 
   const response = await fetch(endpoint, {
